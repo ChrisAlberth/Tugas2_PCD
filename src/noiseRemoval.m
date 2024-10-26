@@ -1,29 +1,4 @@
-function result = noiseRemoval(image, noise_type, filter_type)
-    noisedImage = noiseImage(image, 0.1);
-
-    denoisedImage = removeNoise(noisedImage, filter_type);
-
-    % figure;
-    % subplot(1, 3, 1);
-    % imshow(image);
-    % title('Gambar Asli');
-    
-    % subplot(1, 3, 2);
-    % imshow(noisyImage);
-    % title('Gambar dengan Noise Salt & Pepper');
-    
-    % subplot(1, 3, 3);
-    % imshow(denoisedImage);
-    % title(['Gambar Hasil Penghilangan Noise - Filter ' filter_type]);
-
-    result = denoisedImage;
-end
-
-function result = noiseImage(image, density)
-    result = imnoise(image, 'salt & pepper', density);
-end
-
-function result = removeNoise(image, filter_type)
+function result = noiseRemoval(image, filter_type)
     image = im2double(image);
     padded_image = padarray(image, [1, 1], 'replicate');
 
@@ -47,23 +22,23 @@ function result = removeChannelNoise(channel, filter_type)
         for j = 1:cols-2
             window = channel(i:i+2, j:j+2);
 
-            if filter_type == "min"
+            if filter_type == "Minimum"
                 result(i, j) = min(window(:));
-            elseif filter_type == "max"
+            elseif filter_type == "Maximum"
                 result(i, j) = max(window(:));
-            elseif filter_type == "median"
+            elseif filter_type == "Median"
                 result(i, j) = median(window(:));
-            elseif filter_type == "arithmetic mean"
+            elseif filter_type == "Arithmetic Mean"
                 result(i, j) = mean(window(:));
-            elseif filter_type == "geometric mean"
+            elseif filter_type == "Geometric Mean"
                 result(i, j) = prod(window(:))^(1/9);
-            elseif filter_type == "harmonic mean"
+            elseif filter_type == "Harmonic Mean"
                 result(i, j) = 3*3 / sum(1 ./ double(window(:)));
-            elseif filter_type == "contraharmonic mean"
+            elseif filter_type == "Contraharmonic Mean"
                 result(i, j) = sum(window(:).^2) / sum(window(:));
-            elseif filter_type == "midpoint"
+            elseif filter_type == "Midpoint"
                 result(i, j) = (min(window(:)) + max(window(:))) / 2;
-            elseif filter_type == "alpha-trimmed mean"
+            elseif filter_type == "Alpha-trimmed Mean"
                 sorted_window = sort(window(:));
                 result(i, j) = mean(sorted_window(3:end-2));
             end
